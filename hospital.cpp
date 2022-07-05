@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <bits/stdc++.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -156,7 +157,8 @@ void listLocations()
 
     while (getline(file, line))
     {
-        foundLocations.push_back(line);
+        if (!(find(foundLocations.begin(), foundLocations.end(), (line)) != foundLocations.end()))
+            foundLocations.push_back(line);
     }
     file.close();
 
@@ -194,8 +196,10 @@ void listDiseasesInExistinglocation()
     {
         vector<string> words;
         tokenizestring(line, '\t', words);
-        sortedDiseases.push_back(words[0]);
+        if (!(find(sortedDiseases.begin(), sortedDiseases.end(), (words[0])) != sortedDiseases.end()))
+            sortedDiseases.push_back(words[0]);
     }
+
     file.close();
     sort(sortedDiseases.begin(), sortedDiseases.end(), compareFunction);
     cout << "\n\n";
@@ -227,7 +231,8 @@ void locationWithDisease(string disease)
         if (toLowercase(words[0]) == disease)
         {
             found = true;
-            foundLocations.push_back(words[1]);
+            if (!(find(foundLocations.begin(), foundLocations.end(), (words[1])) != foundLocations.end()))
+                foundLocations.push_back(words[1]);
         }
     }
 
@@ -288,7 +293,7 @@ void casesOfDiseaseInLocaion(string disease, string location)
             total += stoi(words[2]);
         }
     }
-    cout << "Cases of " << disease << " in " << location << " are " << total << endl;
+    cout << "Cases of " << disease << " in " << location << " are :" << total << endl;
 
     cout << "\n\n";
     file.close();
