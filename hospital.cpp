@@ -26,6 +26,7 @@ public:
 
 inline bool fileExists(const std::string &name)
 {
+    //check if a file exists in the file system
     struct stat buffer;
     return (stat(name.c_str(), &buffer) == 0);
 }
@@ -40,6 +41,7 @@ string toLowercase(string input)
 
 string searchFile(string location, string filename, bool showNotFoundMessage = false)
 {
+    //a function that searches through a file and return the found result
     ifstream file;
     file.open(filename);
     string line;
@@ -64,8 +66,8 @@ string searchFile(string location, string filename, bool showNotFoundMessage = f
 
 void createLocation(string locationName)
 {
+    // create a location
     Location location;
-    // create a file
     ofstream locations;
     locations.open("locations.txt", ios::app);
     string duplicateLocation = searchFile(toLowercase(locationName), "locations.txt");
@@ -86,6 +88,7 @@ void createLocation(string locationName)
 
 void deleteLocation(string locationToDelete)
 {
+    //delete a location
     string foundLocation = searchFile(locationToDelete, "locations.txt", true);
     string diseaseFromLocation = searchFile(toLowercase(locationToDelete), "diseases.txt");
 
@@ -110,6 +113,7 @@ void deleteLocation(string locationToDelete)
             }
         }
 
+        //delete cases associated with this location
         while (getline(diseasesFile, line))
         {
             if (toLowercase(diseaseFromLocation) != toLowercase(line))
@@ -134,6 +138,7 @@ void deleteLocation(string locationToDelete)
 
 void createDisease(string diseaseName, string diseaseLocation, int diseaseCases)
 {
+    //record a disease
     Disease disease;
     ofstream diseases;
     diseases.open("diseases.txt", ios::app);
@@ -171,6 +176,7 @@ bool compareFunction(string a, string b) { return a < b; }
 
 void listLocations()
 {
+    //list all locations stored in a file
     system("clear");
     ifstream file;
     vector<string> foundLocations{};
@@ -236,6 +242,7 @@ void listDiseasesInExistinglocation()
 
 void locationWithDisease(string disease)
 {
+    //get a location that has a certain disease
     ifstream file;
     file.open("diseases.txt");
     string line;
@@ -278,6 +285,7 @@ void locationWithDisease(string disease)
 
 void totalCasesOfDisease(string disease)
 {
+    //total cases of a disease in all districts
     ifstream file;
     file.open("diseases.txt");
     string line;
@@ -298,6 +306,7 @@ void totalCasesOfDisease(string disease)
 
 void casesOfDiseaseInLocaion(string disease, string location)
 {
+    //get all cases of a disease in a certain location
     ifstream file;
     file.open("diseases.txt");
     string line;
@@ -323,24 +332,6 @@ void casesOfDiseaseInLocaion(string disease, string location)
 
 void helpMenu()
 {
-    auto end = std::chrono::system_clock::now();
-    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-
-    cout << "======================================================================\n"
-         << endl;
-    cout << "*\t\t Welcome to Disease Cases Reporting system!\t\t*\n"
-         << endl;
-    cout << "*  ******************************************************************** *\n"
-         << endl;
-    cout << "*\n"
-         << endl;
-    cout << "* It is developed by Blessing Hirwa as practical *\n\n";
-    cout << "* evaluatin for end of Year 3 *" << endl;
-    cout << "====================================================\n\n"
-         << endl;
-    cout << "Starting time: " << ctime(&end_time) << endl;
-    cout
-        << "Need a help? Type help then press Enter key.  " << endl;
 
     cout << "===============================================================================" << endl;
     cout << "\t\t\t\t\tHELP MENU\t\t\t" << endl;
@@ -400,7 +391,25 @@ int main()
     do
     {
         cout << "\n\n";
-        cout << "Console >: ";
+        auto end = std::chrono::system_clock::now();
+        std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+
+        cout << "======================================================================\n"
+                << endl;
+        cout << "*\t\t Welcome to Disease Cases Reporting system!\t\t*\n"
+                << endl;
+        cout << "*  ******************************************************************** *\n"
+                << endl;
+        cout << "*\n"
+                << endl;
+        cout << "* It is developed by Blessing Hirwa as practical *\n\n";
+        cout << "* evaluatin for end of Year 3 *" << endl;
+        cout << "====================================================\n\n"
+                << endl;
+        cout << "Starting time: " << ctime(&end_time) << endl;
+        cout
+            << "Need a help? Type help then press Enter key.  " << endl;
+            cout << "Console >: ";
         getline(cin, option);
 
         processCommand(option);
