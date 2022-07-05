@@ -43,10 +43,10 @@ void createLocation()
          << endl;
 }
 
-string searchLocation(string location)
+string searchFile(string location, string filename)
 {
     ifstream file;
-    file.open("locations.txt");
+    file.open(filename);
     string line;
     string result = "";
     while (getline(file, line))
@@ -60,7 +60,7 @@ string searchLocation(string location)
 
     if (result == "")
     {
-        cout << "\n\nLocation not found, try another one!\n\n";
+        cout << "\n\nRecord not found, try another one!\n\n";
     }
 
     return result;
@@ -73,7 +73,7 @@ void deleteLocation()
     cout << "Enter location name: ";
     cin >> locationToDelete;
 
-    string foundLocation = searchLocation(locationToDelete);
+    string foundLocation = searchFile(locationToDelete, "locations.txt");
 
     if (foundLocation != "")
     {
@@ -111,7 +111,7 @@ create_disease:
     cin >> disease.name;
     cout << "Enter the name of the location: ";
     cin >> disease.location;
-    string loc = searchLocation(disease.location);
+    string loc = searchFile(disease.location, "locations.txt");
     if (loc == "")
     {
         cout << "\n\nLocation not found, try another one!\n\n";
@@ -129,7 +129,7 @@ create_disease:
                  << "Cases" << endl;
     }
 
-    diseases << disease.name << "\t\t" << disease.location << "\t\t" << disease.cases << endl;
+    diseases << disease.name << "\t" << disease.location << "\t" << disease.cases << endl;
     diseases.close();
     cout << "\n\n***Disease created successfully***\n\n"
          << endl;
@@ -175,6 +175,71 @@ void listDiseasesInAlocation()
         cout << "\n\n"
              << words[0];
     }
+    cout << "\n\n";
+    file.close();
+}
+
+void locationWithDisease()
+{
+    string disease = "FEVER";
+    ifstream file;
+    file.open("diseases.txt");
+    string line;
+    string key = "";
+    bool found = false;
+
+    while (getline(file, line))
+    {
+        vector<string> words;
+        tokenizestring(line, '\t', words);
+
+        cout << "\n";
+
+        if (words[0] == disease)
+        {
+            found = true;
+            cout << words[1];
+        }
+    }
+
+    if (found == false)
+    {
+        cout << "No location with this disease!";
+    }
+
+    cout << "\n\n";
+    file.close();
+}
+
+void casesOfDiseaseInLocaion()
+{
+    string disease = "FEVER";
+    string location = "Nyabihu";
+    ifstream file;
+    file.open("diseases.txt");
+    string line;
+    string key = "";
+    bool found = false;
+
+    while (getline(file, line))
+    {
+        vector<string> words;
+        tokenizestring(line, '\t', words);
+
+        cout << "\n";
+
+        if (words[0] == disease && words[1] == location)
+        {
+            found = true;
+            cout << "Cases of " << disease << " in " << location << " are " << words[2] << endl;
+        }
+    }
+
+    if (found == false)
+    {
+        cout << "No cases of this disease in this location!";
+    }
+
     cout << "\n\n";
     file.close();
 }
@@ -238,14 +303,18 @@ void menuDisplay()
             listDiseasesInAlocation();
             break;
         case 6:
+            locationWithDisease();
             break;
         case 7:
+            casesOfDiseaseInLocaion();
             break;
         case 8:
             break;
         case 9:
             break;
         case 10:
+            cout << endl
+                 << "\t\tThanks For Using Our Services!" << endl;
             break;
         default:
             cout << "Invalid option" << endl;
