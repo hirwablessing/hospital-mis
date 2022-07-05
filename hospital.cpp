@@ -55,11 +55,14 @@ string searchFile(string location, string filename)
     file.open(filename);
     string line;
     string result = "";
+    cout << location;
     while (getline(file, line))
     {
-        if (toLowercase(line).find(toLowercase(location)) != string::npos)
+        string temp = toLowercase(line);
+        cout << temp;
+        if (temp.find(location) != string::npos)
         {
-            result = line;
+            result = temp;
         }
     }
     file.close();
@@ -107,14 +110,12 @@ void createDisease(string diseaseName, string diseaseLocation, int diseaseCases)
     ofstream diseases;
     diseases.open("diseases.txt", ios::app);
 
-create_disease:
     disease.name = diseaseName;
     disease.location = diseaseLocation;
     string loc = searchFile(diseaseLocation, "locations.txt");
     if (loc == "")
     {
         cout << "\n\nLocation not found, try another one!\n\n";
-        goto create_disease;
     }
 
     disease.cases = diseaseCases;
@@ -196,7 +197,7 @@ void locationWithDisease(string disease)
 
         cout << "\n";
 
-        if (toLowercase(words[0]) == toLowercase(disease))
+        if (toLowercase(words[0]) == disease)
         {
             found = true;
             cout << words[1];
@@ -223,7 +224,7 @@ void totalCasesOfDisease(string disease)
         vector<string> words;
         tokenizestring(line, '\t', words);
 
-        if (toLowercase(words[0]) == toLowercase(disease))
+        if (toLowercase(words[0]) == disease)
         {
             total += stoi(words[2]);
         }
@@ -237,27 +238,21 @@ void casesOfDiseaseInLocaion(string disease, string location)
     ifstream file;
     file.open("diseases.txt");
     string line;
-    string key = "";
-    bool found = false;
+
+    int total = 0;
 
     while (getline(file, line))
     {
         vector<string> words;
         tokenizestring(line, '\t', words);
-
         cout << "\n";
 
-        if (toLowercase(words[0]) == toLowercase(disease) && toLowercase(words[1]) == toLowercase(location))
+        if (toLowercase(words[0]) == disease && toLowercase(words[1]) == location)
         {
-            found = true;
-            cout << "Cases of " << disease << " in " << location << " are " << words[2] << endl;
+            total += stoi(words[2]);
         }
     }
-
-    if (found == false)
-    {
-        cout << "No cases of this disease in this location!";
-    }
+    cout << "Cases of " << disease << " in " << location << " are " << total << endl;
 
     cout << "\n\n";
     file.close();
@@ -284,16 +279,17 @@ void helpMenu()
     cout << "\t\t\t\t\tHELP MENU\t\t\t" << endl;
     cout << "================================================================================\n\n"
          << endl;
-    cout << "add<Location> \t\t\t\t\t: Add location" << endl;
-    cout << "delete<Location> \t\t\t\t: Delete an existing location" << endl;
-    cout << "record<Location> <disease> <cases> \t\t: Record a disease and its cases" << endl;
+    cout << "add <Location> \t\t\t\t\t: Add location" << endl;
+    cout << "delete <Location> \t\t\t\t: Delete an existing location" << endl;
+    cout << "record <Location> <disease> <cases> \t\t: Record a disease and its cases" << endl;
     cout << "list locations \t\t\t\t: List all existing locations" << endl;
     cout << "list diseases \t\t\t\t: List all existing Diseases in locations" << endl;
     cout << "where <disease> \t\t\t\t: Find where disease exists" << endl;
-    cout << "cases <location><disease> \t\t\t: Find cases of a disease in a location" << endl;
+    cout << "cases <location> <disease> \t\t\t: Find cases of a disease in a location" << endl;
     cout << "cases <disease> \t\t\t\t: Find total cases of a given disease" << endl;
     cout << "help \t\t\t\t: Prints user manual" << endl;
     cout << "Exit \t\t\t\t: Exits the program" << endl;
+    cout << "\n\n";
 }
 
 void processCommand(string cmd)
@@ -301,7 +297,7 @@ void processCommand(string cmd)
     system("clear");
     vector<string> command;
     tokenizestring(cmd, ' ', command);
-    cmd = toLowercase(cmd);
+    command[0] = toLowercase(command[0]);
 
     if (command[0] == "add")
         createLocation(command[1]);
@@ -314,11 +310,11 @@ void processCommand(string cmd)
     else if (cmd == "list diseases")
         listDiseasesInExistinglocation();
     else if (command[0] == "where")
-        locationWithDisease(command[1]);
-    else if (command.size() == 2 && command[0] == "cases")
-        casesOfDiseaseInLocaion(command[1], command[2]);
-    else if (command[0] == "cases" && command.size() == 1)
-        totalCasesOfDisease(command[1]);
+        locationWithDisease(toLowercase(command[1]));
+    else if (command.size() == 3 && command[0] == "cases")
+        casesOfDiseaseInLocaion(toLowercase(command[2]), toLowercase(command[1]));
+    else if (command[0] == "cases" && command.size() == 2)
+        totalCasesOfDisease(toLowercase(command[1]));
     else if (cmd == "help")
         helpMenu();
     else if (cmd == "exit")
@@ -334,7 +330,7 @@ int main()
     do
     {
         cout << "\n\n";
-        cout << "Console > (1-9): ";
+        cout << "Console >: ";
         getline(cin, option);
 
         processCommand(option);

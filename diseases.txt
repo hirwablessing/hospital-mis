@@ -1,2 +1,3 @@
 FEVER	Nyabihu	4
 FEVER	Gasabo	2
+Huye	HIV	5
