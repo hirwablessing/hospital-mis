@@ -135,21 +135,31 @@ void createDisease(string diseaseName, string diseaseLocation, int diseaseCases)
          << endl;
 }
 
+bool compareFunction(string a, string b) { return a < b; }
+
 void listLocations()
 {
     system("clear");
     ifstream file;
-    int counter = 0;
+    vector<string> foundLocations{};
     file.open("locations.txt");
     string line;
+
     while (getline(file, line))
     {
-        cout << "\n\n"
-             << counter + 1 << " " << line;
-        counter++;
+        foundLocations.push_back(line);
     }
-    cout << "\n\n";
     file.close();
+
+    sort(foundLocations.begin(), foundLocations.end(), compareFunction);
+    for (int i = 0; i < foundLocations.size(); i++)
+    {
+
+        cout << "\n\n"
+             << i + 1 << ". " << foundLocations[i] << endl;
+    }
+
+    cout << "\n\n";
 }
 
 void tokenizestring(string const &str, const char delim, vector<string> &out)
@@ -175,11 +185,18 @@ void listDiseasesInExistinglocation()
     {
         vector<string> words;
         tokenizestring(line, '\t', words);
-        cout << "\n\n"
-             << words[0];
+        sortedDiseases.push_back(words[0]);
+    }
+    file.close();
+    sort(sortedDiseases.begin(), sortedDiseases.end(), compareFunction);
+    cout << "\n\n";
+
+    for (int i = 0; i < sortedDiseases.size(); i++)
+    {
+
+        cout << i + 1 << ". " << sortedDiseases[i] << endl;
     }
     cout << "\n\n";
-    file.close();
 }
 
 void locationWithDisease(string disease)
@@ -189,6 +206,7 @@ void locationWithDisease(string disease)
     string line;
     string key = "";
     bool found = false;
+    vector<string> foundLocations;
 
     while (getline(file, line))
     {
@@ -200,13 +218,22 @@ void locationWithDisease(string disease)
         if (toLowercase(words[0]) == disease)
         {
             found = true;
-            cout << words[1];
+            foundLocations.push_back(words[1]);
         }
     }
 
     if (found == false)
     {
         cout << "No location with this disease!";
+    }
+    else
+    {
+        sort(foundLocations.begin(), foundLocations.end(), compareFunction);
+        for (int i = 0; i < foundLocations.size(); i++)
+        {
+
+            cout << i + 1 << ". " << foundLocations[i] << endl;
+        }
     }
 
     cout << "\n\n";
