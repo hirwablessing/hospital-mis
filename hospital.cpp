@@ -38,7 +38,7 @@ string toLowercase(string input)
     return str;
 }
 
-string searchFile(string location, string filename)
+string searchFile(string location, string filename, bool showNotFoundMessage = false)
 {
     ifstream file;
     file.open(filename);
@@ -47,14 +47,14 @@ string searchFile(string location, string filename)
     while (getline(file, line))
     {
         string temp = toLowercase(line);
-        if (temp.find(location) != string::npos)
+        if (temp.find(toLowercase(location)) != string::npos)
         {
             result = temp;
         }
     }
     file.close();
 
-    if (result == "")
+    if (result == "" && showNotFoundMessage)
     {
         cout << "\n\nRecord not found, try again!\n\n";
     }
@@ -69,6 +69,7 @@ void createLocation(string locationName)
     ofstream locations;
     locations.open("locations.txt", ios::app);
     string duplicateLocation = searchFile(toLowercase(locationName), "locations.txt");
+
     if (duplicateLocation == "")
     {
         location.name = locationName;
@@ -85,14 +86,20 @@ void createLocation(string locationName)
 
 void deleteLocation(string locationToDelete)
 {
-    string foundLocation = searchFile(locationToDelete, "locations.txt");
+    string foundLocation = searchFile(locationToDelete, "locations.txt", true);
+    string diseaseFromLocation = searchFile(toLowercase(locationToDelete), "diseases.txt");
 
     if (foundLocation != "")
     {
         ifstream file;
         ofstream newfile;
+        ifstream diseasesFile;
+        ofstream newDiseasesFile;
+
         file.open("locations.txt");
         newfile.open("newlocations.txt");
+        diseasesFile.open("diseases.txt");
+        newDiseasesFile.open("newdiseases.txt");
         string line;
 
         while (getline(file, line))
@@ -102,9 +109,22 @@ void deleteLocation(string locationToDelete)
                 newfile << line << endl;
             }
         }
+
+        while (getline(diseasesFile, line))
+        {
+            if (toLowercase(diseaseFromLocation) != toLowercase(line))
+            {
+                newDiseasesFile << line << endl;
+            }
+        }
+
         cout << endl;
         file.close();
         newfile.close();
+        diseasesFile.close();
+        newDiseasesFile.close();
+        remove("diseases.txt");
+        rename("newdiseases.txt", "diseases.txt");
         remove("locations.txt");
         rename("newlocations.txt", "locations.txt");
         cout << "\n\n**Location deleted successfully**\n\n"
@@ -121,6 +141,7 @@ void createDisease(string diseaseName, string diseaseLocation, int diseaseCases)
     disease.name = diseaseName;
     disease.location = diseaseLocation;
     string loc = searchFile(diseaseLocation, "locations.txt");
+
     if (loc == "")
     {
         cout << "\n\nLocation not found, try another one!\n\n";
@@ -350,7 +371,7 @@ void processCommand(string cmd)
     else if (command[0] == "delete")
         deleteLocation(command[1]);
     else if (command[0] == "record")
-        createDisease(command[1], command[2], stoi(command[3]));
+        createDisease(command[2], command[1], stoi(command[3]));
     else if (toLowercase(cmd) == "list locations")
         listLocations();
     else if (toLowercase(cmd) == "list diseases")

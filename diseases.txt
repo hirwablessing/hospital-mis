@@ -1,3 +1,1 @@
-FEVER	Nyabihu	4
-FEVER	Gasabo	2
-HIV	Huye	5
+fever	karongi	6

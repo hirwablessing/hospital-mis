@@ -10,6 +10,7 @@
     "typeinfo": "cpp",
     "chrono": "cpp",
     "initializer_list": "cpp",
-    "valarray": "cpp"
+    "valarray": "cpp",
+    "*.tcc": "cpp"
   }
 }
