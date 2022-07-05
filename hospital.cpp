@@ -6,6 +6,7 @@
 #include <string>
 #include <bits/stdc++.h>
 #include <algorithm>
+#include <ctime>
 
 using namespace std;
 
@@ -55,7 +56,7 @@ string searchFile(string location, string filename)
 
     if (result == "")
     {
-        cout << "\n\nRecord not found, try another one!\n\n";
+        cout << "\n\nRecord not found, try again!\n\n";
     }
 
     return result;
@@ -301,20 +302,24 @@ void casesOfDiseaseInLocaion(string disease, string location)
 
 void helpMenu()
 {
+    auto end = std::chrono::system_clock::now();
+    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+
     cout << "======================================================================\n"
          << endl;
     cout << "*\t\t Welcome to Disease Cases Reporting system!\t\t*\n"
          << endl;
-    cout << "*  ********************************************************************   *\n"
+    cout << "*  ******************************************************************** *\n"
          << endl;
     cout << "*\n"
          << endl;
-    cout << "* It is developed by Blessing Hirwa as practical *\n";
+    cout << "* It is developed by Blessing Hirwa as practical *\n\n";
     cout << "* evaluatin for end of Year 3 *" << endl;
-    cout << "====================================================\n"
+    cout << "====================================================\n\n"
          << endl;
-    cout << "Starting time: Thu Apr 05 23:59:08 CAT 2022  " << endl;
-    cout << "Need a help? Type help then press Enter key.  " << endl;
+    cout << "Starting time: " << ctime(&end_time) << endl;
+    cout
+        << "Need a help? Type help then press Enter key.  " << endl;
 
     cout << "===============================================================================" << endl;
     cout << "\t\t\t\t\tHELP MENU\t\t\t" << endl;
@@ -323,13 +328,13 @@ void helpMenu()
     cout << "add <Location> \t\t\t\t\t: Add location" << endl;
     cout << "delete <Location> \t\t\t\t: Delete an existing location" << endl;
     cout << "record <Location> <disease> <cases> \t\t: Record a disease and its cases" << endl;
-    cout << "list locations \t\t\t\t: List all existing locations" << endl;
-    cout << "list diseases \t\t\t\t: List all existing Diseases in locations" << endl;
+    cout << "list locations \t\t\t\t\t: List all existing locations" << endl;
+    cout << "list diseases \t\t\t\t\t: List all existing Diseases in locations" << endl;
     cout << "where <disease> \t\t\t\t: Find where disease exists" << endl;
     cout << "cases <location> <disease> \t\t\t: Find cases of a disease in a location" << endl;
     cout << "cases <disease> \t\t\t\t: Find total cases of a given disease" << endl;
-    cout << "help \t\t\t\t: Prints user manual" << endl;
-    cout << "Exit \t\t\t\t: Exits the program" << endl;
+    cout << "help \t\t\t\t\t\t: Prints user manual" << endl;
+    cout << "Exit \t\t\t\t\t\t: Exits the program" << endl;
     cout << "\n\n";
 }
 
@@ -346,9 +351,9 @@ void processCommand(string cmd)
         deleteLocation(command[1]);
     else if (command[0] == "record")
         createDisease(command[1], command[2], stoi(command[3]));
-    else if (cmd == "list locations")
+    else if (toLowercase(cmd) == "list locations")
         listLocations();
-    else if (cmd == "list diseases")
+    else if (toLowercase(cmd) == "list diseases")
         listDiseasesInExistinglocation();
     else if (command[0] == "where")
         locationWithDisease(toLowercase(command[1]));
@@ -359,7 +364,10 @@ void processCommand(string cmd)
     else if (cmd == "help")
         helpMenu();
     else if (cmd == "exit")
+    {
+        cout << "Thank you for using the program.\n";
         exit(0);
+    }
     else
         cout << "Invalid command!\n\n";
 }

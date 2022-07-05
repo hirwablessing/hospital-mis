@@ -7,6 +7,9 @@
     "functional": "cpp",
     "iosfwd": "cpp",
     "typeindex": "cpp",
-    "typeinfo": "cpp"
+    "typeinfo": "cpp",
+    "chrono": "cpp",
+    "initializer_list": "cpp",
+    "valarray": "cpp"
   }
 }
