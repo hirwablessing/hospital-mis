@@ -1,0 +1,3 @@
+Disease Name	Location	Cases
+HIV		Gasabo		3
+FEVER		Nyabihu	5
