@@ -387,29 +387,30 @@ void processCommand(string cmd)
 int main()
 {
     string option;
+    auto end = std::chrono::system_clock::now();
+    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+
+    cout << "======================================================================\n"
+            << endl;
+    cout << "*\t\t Welcome to Disease Cases Reporting system!\t\t*\n"
+            << endl;
+    cout << "*  ******************************************************************** *\n"
+            << endl;
+    cout << "*\n"
+            << endl;
+    cout << "* It is developed by Blessing Hirwa as practical *\n\n";
+    cout << "* evaluatin for end of Year 3 *" << endl;
+    cout << "====================================================\n\n"
+            << endl;
+    cout << "Starting time: " << ctime(&end_time) << endl;
+    cout
+        << "Need a help? Type help then press Enter key.  " << endl;
 
     do
     {
         cout << "\n\n";
-        auto end = std::chrono::system_clock::now();
-        std::time_t end_time = std::chrono::system_clock::to_time_t(end);
 
-        cout << "======================================================================\n"
-                << endl;
-        cout << "*\t\t Welcome to Disease Cases Reporting system!\t\t*\n"
-                << endl;
-        cout << "*  ******************************************************************** *\n"
-                << endl;
-        cout << "*\n"
-                << endl;
-        cout << "* It is developed by Blessing Hirwa as practical *\n\n";
-        cout << "* evaluatin for end of Year 3 *" << endl;
-        cout << "====================================================\n\n"
-                << endl;
-        cout << "Starting time: " << ctime(&end_time) << endl;
-        cout
-            << "Need a help? Type help then press Enter key.  " << endl;
-            cout << "Console >: ";
+        cout << "Console >: ";
         getline(cin, option);
 
         processCommand(option);
