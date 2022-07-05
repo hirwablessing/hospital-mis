@@ -4,6 +4,9 @@
     "fstream": "cpp",
     "ostream": "cpp",
     "iostream": "cpp",
-    "functional": "cpp"
+    "functional": "cpp",
+    "iosfwd": "cpp",
+    "typeindex": "cpp",
+    "typeinfo": "cpp"
   }
 }

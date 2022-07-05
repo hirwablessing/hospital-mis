@@ -28,19 +28,25 @@ inline bool fileExists(const std::string &name)
     return (stat(name.c_str(), &buffer) == 0);
 }
 
-void createLocation()
+void createLocation(string locationName)
 {
     Location location;
     // create a file
     ofstream locations;
     locations.open("locations.txt", ios::app);
-
-    cout << "Enter the name of the location: ";
-    cin >> location.name;
+    location.name = locationName;
     locations << location.name << endl;
     locations.close();
     cout << "\n\n***Location created successfully***\n\n"
          << endl;
+}
+
+string toLowercase(string input)
+{
+    string str = input;
+    transform(str.begin(), str.end(), str.begin(), ::tolower);
+
+    return str;
 }
 
 string searchFile(string location, string filename)
@@ -51,7 +57,7 @@ string searchFile(string location, string filename)
     string result = "";
     while (getline(file, line))
     {
-        if (line.find(location) != string::npos)
+        if (toLowercase(line).find(toLowercase(location)) != string::npos)
         {
             result = line;
         }
@@ -66,13 +72,8 @@ string searchFile(string location, string filename)
     return result;
 }
 
-void deleteLocation()
+void deleteLocation(string locationToDelete)
 {
-
-    string locationToDelete;
-    cout << "Enter location name: ";
-    cin >> locationToDelete;
-
     string foundLocation = searchFile(locationToDelete, "locations.txt");
 
     if (foundLocation != "")
@@ -85,7 +86,7 @@ void deleteLocation()
 
         while (getline(file, line))
         {
-            if (foundLocation != line)
+            if (toLowercase(foundLocation) != toLowercase(line))
             {
                 newfile << line << endl;
             }
@@ -100,25 +101,23 @@ void deleteLocation()
     }
 }
 
-void createDisease()
+void createDisease(string diseaseName, string diseaseLocation, int diseaseCases)
 {
     Disease disease;
     ofstream diseases;
     diseases.open("diseases.txt", ios::app);
 
 create_disease:
-    cout << "Enter the name of the disease: ";
-    cin >> disease.name;
-    cout << "Enter the name of the location: ";
-    cin >> disease.location;
-    string loc = searchFile(disease.location, "locations.txt");
+    disease.name = diseaseName;
+    disease.location = diseaseLocation;
+    string loc = searchFile(diseaseLocation, "locations.txt");
     if (loc == "")
     {
         cout << "\n\nLocation not found, try another one!\n\n";
         goto create_disease;
     }
-    cout << "Enter the number of cases: ";
-    cin >> disease.cases;
+
+    disease.cases = diseaseCases;
 
     if (fileExists("diseases.txt") == 0)
     {
@@ -139,15 +138,16 @@ void listLocations()
 {
     system("clear");
     ifstream file;
-    int counter;
+    int counter = 0;
     file.open("locations.txt");
     string line;
     while (getline(file, line))
     {
         cout << "\n\n"
-             << counter + 1 << " " << line << "\n";
+             << counter + 1 << " " << line;
         counter++;
     }
+    cout << "\n\n";
     file.close();
 }
 
@@ -162,12 +162,14 @@ void tokenizestring(string const &str, const char delim, vector<string> &out)
     }
 }
 
-void listDiseasesInAlocation()
+void listDiseasesInExistinglocation()
 {
     // read diseases from file
     ifstream file;
     file.open("diseases.txt");
     string line;
+    vector<string> sortedDiseases;
+
     while (getline(file, line))
     {
         vector<string> words;
@@ -179,9 +181,8 @@ void listDiseasesInAlocation()
     file.close();
 }
 
-void locationWithDisease()
+void locationWithDisease(string disease)
 {
-    string disease = "FEVER";
     ifstream file;
     file.open("diseases.txt");
     string line;
@@ -195,7 +196,7 @@ void locationWithDisease()
 
         cout << "\n";
 
-        if (words[0] == disease)
+        if (toLowercase(words[0]) == toLowercase(disease))
         {
             found = true;
             cout << words[1];
@@ -211,9 +212,8 @@ void locationWithDisease()
     file.close();
 }
 
-void totalCasesOfDisease()
+void totalCasesOfDisease(string disease)
 {
-    string disease = "FEVER";
     ifstream file;
     file.open("diseases.txt");
     string line;
@@ -223,7 +223,7 @@ void totalCasesOfDisease()
         vector<string> words;
         tokenizestring(line, '\t', words);
 
-        if (words[0] == disease)
+        if (toLowercase(words[0]) == toLowercase(disease))
         {
             total += stoi(words[2]);
         }
@@ -232,10 +232,8 @@ void totalCasesOfDisease()
     file.close();
 }
 
-void casesOfDiseaseInLocaion()
+void casesOfDiseaseInLocaion(string disease, string location)
 {
-    string disease = "FEVER";
-    string location = "Nyabihu";
     ifstream file;
     file.open("diseases.txt");
     string line;
@@ -249,7 +247,7 @@ void casesOfDiseaseInLocaion()
 
         cout << "\n";
 
-        if (words[0] == disease && words[1] == location)
+        if (toLowercase(words[0]) == toLowercase(disease) && toLowercase(words[1]) == toLowercase(location))
         {
             found = true;
             cout << "Cases of " << disease << " in " << location << " are " << words[2] << endl;
@@ -265,89 +263,82 @@ void casesOfDiseaseInLocaion()
     file.close();
 }
 
-void menuDisplay()
+void helpMenu()
 {
-    int option;
+    cout << "======================================================================\n"
+         << endl;
+    cout << "*\t\t Welcome to Disease Cases Reporting system!\t\t*\n"
+         << endl;
+    cout << "*  ********************************************************************   *\n"
+         << endl;
+    cout << "*\n"
+         << endl;
+    cout << "* It is developed by Blessing Hirwa as practical *\n";
+    cout << "* evaluatin for end of Year 3 *" << endl;
+    cout << "====================================================\n"
+         << endl;
+    cout << "Starting time: Thu Apr 05 23:59:08 CAT 2022  " << endl;
+    cout << "Need a help? Type help then press Enter key.  " << endl;
 
-    do
-    {
-        cout << "======================================================================\n"
-             << endl;
-        cout << "*\t\t Welcome to Disease Cases Reporting system!\t\t*\n"
-             << endl;
-        cout << "*  ********************************************************************   *\n"
-             << endl;
-        cout << "*\n"
-             << endl;
-        cout << "* It is developed by Blessing Hirwa as practical *\n";
-        cout << "* evaluatin for end of Year 3 *" << endl;
-        cout << "====================================================\n"
-             << endl;
-        cout << "Starting time: Thu Apr 05 23:59:08 CAT 2022  " << endl;
-        cout << "Need a help? Type help then press Enter key.  " << endl;
+    cout << "===============================================================================" << endl;
+    cout << "\t\t\t\t\tHELP MENU\t\t\t" << endl;
+    cout << "================================================================================\n\n"
+         << endl;
+    cout << "add<Location> \t\t\t\t\t: Add location" << endl;
+    cout << "delete<Location> \t\t\t\t: Delete an existing location" << endl;
+    cout << "record<Location> <disease> <cases> \t\t: Record a disease and its cases" << endl;
+    cout << "list locations \t\t\t\t: List all existing locations" << endl;
+    cout << "list diseases \t\t\t\t: List all existing Diseases in locations" << endl;
+    cout << "where <disease> \t\t\t\t: Find where disease exists" << endl;
+    cout << "cases <location><disease> \t\t\t: Find cases of a disease in a location" << endl;
+    cout << "cases <disease> \t\t\t\t: Find total cases of a given disease" << endl;
+    cout << "help \t\t\t\t: Prints user manual" << endl;
+    cout << "Exit \t\t\t\t: Exits the program" << endl;
+}
 
-        cout << "===============================================================================" << endl;
-        cout << "\t\t\t\t\tHELP MENU\t\t\t" << endl;
-        cout << "================================================================================\n\n"
-             << endl;
-        cout << "1. add<Location> \t\t\t\t\t: Add location" << endl;
-        cout << "2. delete<Location> \t\t\t\t: Delete an existing location" << endl;
-        cout << "3. record<Location> <disease> <cases> \t\t: Record a disease and its cases" << endl;
-        cout << "4. list locations \t\t\t\t: List all existing locations" << endl;
-        cout << "5. list diseases \t\t\t\t: List all existing Diseases in locations" << endl;
-        cout << "6. where <disease> \t\t\t\t: Find where disease exists" << endl;
-        cout << "7. cases <location><disease> \t\t\t: Find cases of a disease in a location" << endl;
-        cout << "8. cases <disease> \t\t\t\t: Find total cases of a given disease" << endl;
-        cout << "9. help \t\t\t\t: Prints user manual" << endl;
-        cout << "10. Exit \t\t\t\t: Exits the program" << endl;
+void processCommand(string cmd)
+{
+    system("clear");
+    vector<string> command;
+    tokenizestring(cmd, ' ', command);
 
-        cout << "\t\tConsole > (1-9): ";
-        cin >> option;
-
-        system("clear");
-
-        switch (option)
-        {
-        case 1:
-            createLocation();
-            break;
-        case 2:
-            deleteLocation();
-            break;
-        case 3:
-            createDisease();
-            break;
-        case 4:
-            listLocations();
-            break;
-        case 5:
-            listDiseasesInAlocation();
-            break;
-        case 6:
-            locationWithDisease();
-            break;
-        case 7:
-            casesOfDiseaseInLocaion();
-            break;
-        case 8:
-            totalCasesOfDisease();
-            break;
-        case 9:
-            break;
-        case 10:
-            cout << endl
-                 << "\t\tThanks For Using Our Services!" << endl;
-            break;
-        default:
-            cout << "Invalid option" << endl;
-            break;
-        }
-
-    } while (option != 10);
+    if (command[0] == "add")
+        createLocation(command[1]);
+    else if (command[0] == "delete")
+        deleteLocation(command[1]);
+    else if (command[0] == "record")
+        createDisease(command[1], command[2], stoi(command[3]));
+    else if (cmd == "list locations")
+        listLocations();
+    else if (cmd == "list diseases")
+        listDiseasesInExistinglocation();
+    else if (command[0] == "where")
+        locationWithDisease(command[1]);
+    else if (command.size() == 2 && command[0] == "cases")
+        casesOfDiseaseInLocaion(command[1], command[2]);
+    else if (command[0] == "cases" && command.size() == 1)
+        totalCasesOfDisease(command[1]);
+    else if (cmd == "help")
+        helpMenu();
+    else if (cmd == "exit")
+        exit(0);
+    else
+        cout << "Invalid command!\n\n";
 }
 
 int main()
 {
-    menuDisplay();
+    string option;
+
+    do
+    {
+        cout << "\n\n";
+        cout << "Console > (1-9): ";
+        getline(cin, option);
+
+        processCommand(option);
+
+    } while (option != "exit");
+    ;
     return 0;
 }
