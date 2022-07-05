@@ -352,6 +352,7 @@ void helpMenu()
 }
 
 bool isNumber(std::string x){
+    //a method to check if input is a number
     std::regex e ("^-?\\d+");
     if (std::regex_match (x,e)) return true;
     else return false;
@@ -359,6 +360,7 @@ bool isNumber(std::string x){
 
 void processCommand(string cmd)
 {
+    //a function that processes user command and act accordingly
     system("clear");
     vector<string> command;
     tokenizestring(cmd, ' ', command);
