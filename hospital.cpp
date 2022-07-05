@@ -28,19 +28,6 @@ inline bool fileExists(const std::string &name)
     return (stat(name.c_str(), &buffer) == 0);
 }
 
-void createLocation(string locationName)
-{
-    Location location;
-    // create a file
-    ofstream locations;
-    locations.open("locations.txt", ios::app);
-    location.name = locationName;
-    locations << location.name << endl;
-    locations.close();
-    cout << "\n\n***Location created successfully***\n\n"
-         << endl;
-}
-
 string toLowercase(string input)
 {
     string str = input;
@@ -55,11 +42,9 @@ string searchFile(string location, string filename)
     file.open(filename);
     string line;
     string result = "";
-    cout << location;
     while (getline(file, line))
     {
         string temp = toLowercase(line);
-        cout << temp;
         if (temp.find(location) != string::npos)
         {
             result = temp;
@@ -73,6 +58,27 @@ string searchFile(string location, string filename)
     }
 
     return result;
+}
+
+void createLocation(string locationName)
+{
+    Location location;
+    // create a file
+    ofstream locations;
+    locations.open("locations.txt", ios::app);
+    string duplicateLocation = searchFile(toLowercase(locationName), "locations.txt");
+    if (duplicateLocation == "")
+    {
+        location.name = locationName;
+        locations << location.name << endl;
+        locations.close();
+        cout << "\n\n***Location created successfully***\n\n"
+             << endl;
+    }
+    else
+    {
+        cout << "Location already exists!" << endl;
+    }
 }
 
 void deleteLocation(string locationToDelete)
@@ -117,22 +123,25 @@ void createDisease(string diseaseName, string diseaseLocation, int diseaseCases)
     {
         cout << "\n\nLocation not found, try another one!\n\n";
     }
-
-    disease.cases = diseaseCases;
-
-    if (fileExists("diseases.txt") == 0)
+    else
     {
-        diseases << "Disease Name"
-                 << "\t"
-                 << "Location"
-                 << "\t"
-                 << "Cases" << endl;
-    }
 
-    diseases << disease.name << "\t" << disease.location << "\t" << disease.cases << endl;
-    diseases.close();
-    cout << "\n\n***Disease created successfully***\n\n"
-         << endl;
+        disease.cases = diseaseCases;
+
+        if (fileExists("diseases.txt") == 0)
+        {
+            diseases << "Disease Name"
+                     << "\t"
+                     << "Location"
+                     << "\t"
+                     << "Cases" << endl;
+        }
+
+        diseases << disease.name << "\t" << disease.location << "\t" << disease.cases << endl;
+        diseases.close();
+        cout << "\n\n***Disease created successfully***\n\n"
+             << endl;
+    }
 }
 
 bool compareFunction(string a, string b) { return a < b; }
