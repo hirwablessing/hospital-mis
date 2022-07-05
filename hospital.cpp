@@ -301,6 +301,7 @@ void processCommand(string cmd)
     system("clear");
     vector<string> command;
     tokenizestring(cmd, ' ', command);
+    cmd = toLowercase(cmd);
 
     if (command[0] == "add")
         createLocation(command[1]);
