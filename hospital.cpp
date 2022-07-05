@@ -211,6 +211,27 @@ void locationWithDisease()
     file.close();
 }
 
+void totalCasesOfDisease()
+{
+    string disease = "FEVER";
+    ifstream file;
+    file.open("diseases.txt");
+    string line;
+    int total = 0;
+    while (getline(file, line))
+    {
+        vector<string> words;
+        tokenizestring(line, '\t', words);
+
+        if (words[0] == disease)
+        {
+            total += stoi(words[2]);
+        }
+    }
+    cout << "Total cases of '" << disease << "'= " << total << endl;
+    file.close();
+}
+
 void casesOfDiseaseInLocaion()
 {
     string disease = "FEVER";
@@ -309,6 +330,7 @@ void menuDisplay()
             casesOfDiseaseInLocaion();
             break;
         case 8:
+            totalCasesOfDisease();
             break;
         case 9:
             break;
