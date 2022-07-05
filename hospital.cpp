@@ -7,6 +7,7 @@
 #include <bits/stdc++.h>
 #include <algorithm>
 #include <ctime>
+#include <regex>
 
 using namespace std;
 
@@ -350,6 +351,12 @@ void helpMenu()
     cout << "\n\n";
 }
 
+bool isNumber(std::string x){
+    std::regex e ("^-?\\d+");
+    if (std::regex_match (x,e)) return true;
+    else return false;
+}
+
 void processCommand(string cmd)
 {
     system("clear");
@@ -357,12 +364,25 @@ void processCommand(string cmd)
     tokenizestring(cmd, ' ', command);
     command[0] = toLowercase(command[0]);
 
-    if (command[0] == "add")
+    if (command[0] == "add"){
+        if(isNumber(command[1]))
+        cout<<"Input must be a string"<<endl;
+
+        else{
         createLocation(command[1]);
+        }
+    }
+
     else if (command[0] == "delete")
         deleteLocation(command[1]);
-    else if (command[0] == "record")
-        createDisease(command[2], command[1], stoi(command[3]));
+    else if (command[0] == "record"){
+        if(!isNumber(command[3])){
+            cout<<"Input must be a number"<<endl;
+        }else{
+            createDisease(command[2], command[1], stoi(command[3]));
+        }
+    }
+        
     else if (toLowercase(cmd) == "list locations")
         listLocations();
     else if (toLowercase(cmd) == "list diseases")
@@ -413,7 +433,13 @@ int main()
         cout << "Console >: ";
         getline(cin, option);
 
+        if(cin.fail()){
+            cout<<"Invalid input detected, use correct inputs only!";
+        }else{
+
         processCommand(option);
+        }
+
 
     } while (option != "exit");
     ;
